@@ -1,0 +1,45 @@
+machines:
+  - hostname: web-api-dev
+    ip: 10.10.1.11
+    scope: dev
+    user: juan
+
+  - hostname: data-node-dev
+    ip: 10.10.1.12
+    scope: dev
+    user: juan
+
+  - hostname: data-node-dev
+    ip: 10.10.1.12
+    scope: dev
+    user: diego
+
+  - hostname: web-api-prod
+    ip: 10.10.2.21
+    scope: prod
+    user: root
+
+  - hostname: web-api-prod
+    ip: 10.10.2.21
+    scope: prod
+    user: juan
+
+  - hostname: web-api-prod
+    ip: 10.10.2.21
+    scope: prod
+    user: diego
+
+  - hostname: data-node-prod
+    ip: 10.10.2.22
+    scope: prod
+    user: root
+
+  - hostname: macbook-air
+    ip: 192.168.1.101
+    scope: personal
+    user: juan
+
+  - hostname: mac-mini
+    ip: 192.168.1.104
+    scope: personal
+    user: juan
