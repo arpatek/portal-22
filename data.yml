@@ -33,6 +33,6 @@ machines:
     encryption: ed25519
 
   # Basic host key — no type prefix
-  - host: gonk-1
-    hostname: gonk-1.home.arpa
+  - host: gonk-01
+    hostname: gonk-01.home.arpa
     user: sysadmin

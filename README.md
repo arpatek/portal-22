@@ -37,7 +37,7 @@ Global keys are added to `Host *` in `~/.ssh/config`.
 ./portal_22.py -t admin -H mikoshi
 
 # Bare host key
-./portal_22.py -H gonk-1
+./portal_22.py -H gonk-01
 
 # With options
 ./portal_22.py -t admin -H mikoshi -e rsa -P   # rsa, prompt for passphrase
@@ -85,8 +85,8 @@ machines:
     user: arpatek
     type: admin
 
-  - host: gonk-1                    # bare host key
-    hostname: gonk-1.home.arpa
+  - host: gonk-01                   # bare host key
+    hostname: gonk-01.home.arpa
     user: sysadmin
 ```
 
