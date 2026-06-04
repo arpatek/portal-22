@@ -1,74 +1,109 @@
 # portal-22
 
-```
-┌──────────────────────────────────────────────────────────────┐
-│                         Portal-22                            │
-│         SSH Key & Config Generator from YAML Data            │
-│                                                              │
-│      Author: Juan Garcia (arpatek)                           │
-│      Description: Automates SSH key gen and config insertion │
-└──────────────────────────────────────────────────────────────┘
-```
-
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 
-**portal-22** automates the creation of SSH keys and appends SSH config blocks based
-on machine definitions in a YAML file. Supports dry-run previews before making any
-changes.
+SSH key and config generator. Follows the arpatek naming convention. Supports
+single-key CLI mode and bulk YAML mode.
 
 ---
 
-### Features
+## Key naming
 
-`[YAML-Driven]` Define all machines in a single `data.yml` — hostname, IP, user, scope.  
-`[ed25519 Keys]` Generates modern ed25519 keys with structured naming: `key.<scope>.<host>.<user>`.  
-`[Dry-Run Mode]` Preview keys and config blocks that would be written before committing.  
-`[Idempotent]` Skips key generation if a key already exists at the target path.  
+```
+{hostname}.key                      # bare host
+{type}.{hostname}.key               # typed
+{type}.{platform}.key               # platform-scoped (git keys)
+{local-hostname}.key                # global (--global)
+```
+
+Keys are written to `~/.ssh/`. Host entries go to `~/.ssh/config.local`.
+Global keys are added to `Host *` in `~/.ssh/config`.
 
 ---
 
-### Usage
+## Usage
+
+### Single key
 
 ```bash
-./portal_22.py data.yml
-./portal_22.py data.yml --dry-run
+# Global key — local hostname, added to Host * in ~/.ssh/config
+./portal_22.py -g
+
+# Git platform key
+./portal_22.py -t git -p codeberg
+
+# Admin key to a homelab host
+./portal_22.py -t admin -H mikoshi
+
+# Bare host key
+./portal_22.py -H gonk-1
+
+# With options
+./portal_22.py -t admin -H mikoshi -e rsa -P   # rsa, prompt for passphrase
+./portal_22.py -t git -p github -n              # dry-run
+```
+
+### Bulk mode
+
+```bash
+./portal_22.py -f /path/to/machines.yml
+./portal_22.py -f /path/to/machines.yml --dry-run
 ```
 
 ---
 
-### YAML Format
+## Flags
+
+| Flag | Short | Description |
+|---|---|---|
+| `--global` | `-g` | Global key using local hostname |
+| `--type` | `-t` | `git` `admin` `deploy` `ci` `tunnel` |
+| `--platform` | `-p` | Platform scope — requires `-t`, exclusive with `-H` |
+| `--host` | `-H` | Destination hostname — exclusive with `-p` |
+| `--user` | `-u` | SSH user (default: `git` for type=git, else current user) |
+| `--encryption` | `-e` | `ed25519` `rsa` `ecdsa` (default: `ed25519`) |
+| `--passphrase` | `-P` | Prompt for passphrase |
+| `--yaml` | `-f` | YAML file for bulk mode |
+| `--dry-run` | `-n` | Simulate without writing |
+
+---
+
+## YAML schema
 
 ```yaml
 machines:
-  - hostname: dev-01
-    ip: 10.0.0.10
-    user: admin
-    scope: lab
+  - global: true                    # global key — local hostname
+    encryption: ed25519
 
-  - hostname: prod-web
-    ip: 10.0.0.20
-    user: deploy
-    scope: prod
+  - type: git                       # platform key
+    platform: codeberg
+    user: git
+
+  - host: mikoshi                   # host key with FQDN override
+    hostname: mikoshi.home.arpa
+    user: arpatek
+    type: admin
+
+  - host: gonk-1                    # bare host key
+    hostname: gonk-1.home.arpa
+    user: sysadmin
 ```
 
 ---
 
-### Output
+## Platform map
 
-Keys are written to `~/.ssh/keys/key.<scope>.<hostname>.<user>` and config blocks
-are appended to `~/.ssh/config`:
-
-```
-Host dev-01.admin
-    HostName 10.0.0.10
-    User admin
-    IdentityFile ~/.ssh/keys/key.lab.dev-01.admin
-```
+| Platform | Host alias | HostName |
+|---|---|---|
+| `codeberg` | `codeberg.org` | `codeberg.org` |
+| `github` | `github.com` | `github.com` |
+| `gitlab` | `gitlab.com` | `gitlab.com` |
+| `gitea` | `gitea` | `soulkiller.home.arpa` |
 
 ---
 
-### Requirements
+## Requirements
 
 - Python 3.9+
-- `PyYAML` (`pip install pyyaml`)
+- `PyYAML` — `pip install pyyaml`
