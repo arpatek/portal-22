@@ -1,45 +1,38 @@
+# Portal-22 machine definitions
+# Usage: ./portal_22.py -f data.yml [--dry-run]
+#
+# Fields:
+#   host:        SSH Host alias (required unless global: true)
+#   hostname:    HostName override (optional — defaults to host value or platform map)
+#   user:        SSH user for config entry (required unless global: true)
+#   type:        key type — git, admin, deploy, ci, tunnel (optional)
+#   platform:    codeberg, github, gitlab, gitea (optional — requires type, exclusive with host)
+#   encryption:  ed25519, rsa, ecdsa (optional — default: ed25519)
+#   passphrase:  true/false (optional — default: false)
+#   global:      true/false — use local hostname, writes IdentityFile to Host * (optional)
+
 machines:
-  - hostname: web-api-dev
-    ip: 10.10.1.11
-    scope: dev
-    user: juan
+  # Global key — uses local machine hostname, added to Host * in ~/.ssh/config
+  - global: true
+    encryption: ed25519
 
-  - hostname: data-node-dev
-    ip: 10.10.1.12
-    scope: dev
-    user: juan
+  # Git platform keys — alias and hostname resolved from built-in platform map
+  - type: git
+    platform: codeberg
+    user: git
 
-  - hostname: data-node-dev
-    ip: 10.10.1.12
-    scope: dev
-    user: diego
+  - type: git
+    platform: github
+    user: git
 
-  - hostname: web-api-prod
-    ip: 10.10.2.21
-    scope: prod
-    user: root
+  # Admin key to a homelab host
+  - host: mikoshi
+    hostname: mikoshi.home.arpa
+    user: arpatek
+    type: admin
+    encryption: ed25519
 
-  - hostname: web-api-prod
-    ip: 10.10.2.21
-    scope: prod
-    user: juan
-
-  - hostname: web-api-prod
-    ip: 10.10.2.21
-    scope: prod
-    user: diego
-
-  - hostname: data-node-prod
-    ip: 10.10.2.22
-    scope: prod
-    user: root
-
-  - hostname: macbook-air
-    ip: 192.168.1.101
-    scope: personal
-    user: juan
-
-  - hostname: mac-mini
-    ip: 192.168.1.104
-    scope: personal
-    user: juan
+  # Basic host key — no type prefix
+  - host: gonk-1
+    hostname: gonk-1.home.arpa
+    user: sysadmin
