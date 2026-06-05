@@ -47,7 +47,7 @@ machines:
     user: sysadmin
 
   - host: mikoshi
-    user: arpatek
+    user: sysadmin
 
   - host: soulkiller
     user: arpatek
