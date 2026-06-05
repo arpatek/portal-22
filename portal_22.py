@@ -10,7 +10,7 @@ Author: Juan Garcia (arpatek)
 """
 from __future__ import annotations
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 # ──[ Imports ]─────────────────────────────────────────────────────────────────────────
 import argparse
@@ -246,6 +246,7 @@ def run_bulk(path: str, dry_run: bool) -> None:
 
     SSH_DIR.mkdir(mode=0o700, exist_ok=True)
     include_checked = False
+    host_blocks: list[str] = []
 
     for idx, m in enumerate(machines, 1):
         err = _validate_entry(m, idx)
@@ -282,11 +283,20 @@ def run_bulk(path: str, dry_run: bool) -> None:
             alias    = host
             hostname = m.get("hostname") or host
 
-        write_config_local(alias, hostname, user, key_path, dry_run, port)
+        host_blocks.append(_host_block(alias, hostname, user, key_path, port))
 
         if not include_checked:
             check_include(dry_run)
             include_checked = True
+
+    if host_blocks:
+        section = _portal_section("\n".join(host_blocks))
+        if dry_run:
+            print(f"{PLUS()} [dry-run] Would append to {CONFIG_LOCAL}:\n{section}")
+        else:
+            with CONFIG_LOCAL.open("a", encoding="utf-8") as f:
+                f.write(section)
+            print(f"{COMPLETE()} Config entries written to {CONFIG_LOCAL}")
 
     print(f"{LAMBDA()} Bulk run complete.")
 
