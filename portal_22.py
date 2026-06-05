@@ -81,8 +81,8 @@ def build_comment(
     if global_key:
         return f"{socket.gethostname()}@global"
     if platform:
-        return f"{user}@{platform}"
-    return f"{user}@{host}"
+        return f"{socket.gethostname()}@{platform}"
+    return f"{socket.gethostname()}@{host}"
 
 # ──[ SSH Config ]──────────────────────────────────────────────────────────────────────
 def _host_block(alias: str, hostname: str, user: str, key_path: Path, port: int | None = None) -> str:
