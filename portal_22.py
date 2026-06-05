@@ -85,14 +85,12 @@ def build_comment(
     return f"{user}@{host}"
 
 # ──[ SSH Config ]──────────────────────────────────────────────────────────────────────
-def _host_block(alias: str, hostname: str, user: str, key_path: Path) -> str:
-    return (
-        f"Host {alias}\n"
-        f"  HostName {hostname}\n"
-        f"  User {user}\n"
-        f"  IdentityFile {key_path}\n"
-        f"  IdentitiesOnly yes\n"
-    )
+def _host_block(alias: str, hostname: str, user: str, key_path: Path, port: int | None = None) -> str:
+    lines = [f"Host {alias}\n", f"  HostName {hostname}\n"]
+    if port:
+        lines.append(f"  Port {port}\n")
+    lines += [f"  User {user}\n", f"  IdentityFile {key_path}\n", f"  IdentitiesOnly yes\n"]
+    return "".join(lines)
 
 
 def _portal_section(content: str, *, compact: bool = False) -> str:
@@ -129,8 +127,9 @@ def write_config_local(
     user:     str,
     key_path: Path,
     dry_run:  bool = False,
+    port:     int | None = None,
 ) -> None:
-    block = _portal_section(_host_block(alias, hostname, user, key_path))
+    block = _portal_section(_host_block(alias, hostname, user, key_path, port))
     if dry_run:
         print(f"{PLUS()} [dry-run] Would append to {CONFIG_LOCAL}:\n{block}")
         return
@@ -261,6 +260,7 @@ def run_bulk(path: str, dry_run: bool) -> None:
         user       = m.get("user") or ("git" if key_type == "git" else getpass.getuser())
         encryption = m.get("encryption", "ed25519")
         passphrase = bool(m.get("passphrase", False))
+        port       = m.get("port") or None
 
         key_name = build_key_name(global_key=is_global, key_type=key_type, platform=platform, host=host)
         key_path = SSH_DIR / key_name
@@ -282,7 +282,7 @@ def run_bulk(path: str, dry_run: bool) -> None:
             alias    = host
             hostname = m.get("hostname") or host
 
-        write_config_local(alias, hostname, user, key_path, dry_run)
+        write_config_local(alias, hostname, user, key_path, dry_run, port)
 
         if not include_checked:
             check_include(dry_run)

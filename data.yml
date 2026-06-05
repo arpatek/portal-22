@@ -7,6 +7,7 @@
 #   user:        SSH user for config entry (required unless global: true)
 #   type:        key type — git, admin, deploy, ci, tunnel (optional)
 #   platform:    codeberg, github, gitlab, gitea (optional — requires type, exclusive with host)
+#   port:        SSH port override (optional — default: 22)
 #   encryption:  ed25519, rsa, ecdsa (optional — default: ed25519)
 #   passphrase:  true/false (optional — default: false)
 #   global:      true/false — use local hostname, writes IdentityFile to Host * (optional)
@@ -16,7 +17,8 @@ machines:
   - global: true
     encryption: ed25519
 
-  # Git platform keys — alias and hostname resolved from built-in platform map
+  # ── Git platform keys ──────────────────────────────────────────────────────
+
   - type: git
     platform: codeberg
     user: git
@@ -25,14 +27,47 @@ machines:
     platform: github
     user: git
 
-  # Admin key to a homelab host
-  - host: mikoshi
-    hostname: mikoshi.home.arpa
-    user: arpatek
-    type: admin
-    encryption: ed25519
+  - type: git
+    platform: gitlab
+    user: git
 
-  # Basic host key — no type prefix
+  - type: git
+    platform: gitea
+    user: git
+    port: 2222
+
+  # ── Homelab hosts ──────────────────────────────────────────────────────────
+
+  - host: netrunner
+    hostname: 10.33.111.141
+    user: arpatek
+
+  - host: blackwall
+    hostname: 10.33.111.44
+    user: sysadmin
+
+  - host: mikoshi
+    user: arpatek
+
+  - host: soulkiller
+    user: arpatek
+
+  - host: netwatch
+    user: arpatek
+
+  - host: erebus
+    user: arpatek
+
+  - host: sandevistan
+    user: arpatek
+
+  - host: kerenzikov
+    user: arpatek
+
+  # ── Dev VMs — reprovisioned as needed ─────────────────────────────────────
+
   - host: gonk-01
-    hostname: gonk-01.home.arpa
+    user: sysadmin
+
+  - host: gonk-02
     user: sysadmin
