@@ -80,13 +80,16 @@ machines:
     platform: codeberg
     user: git
 
-  - host: mikoshi                   # host key with FQDN override
-    hostname: mikoshi.home.arpa
-    user: arpatek
-    type: admin
+  - type: git                       # platform key with non-standard port
+    platform: gitea
+    user: git
+    port: 2222
 
-  - host: gonk-01                   # bare host key
-    hostname: gonk-01.home.arpa
+  - host: mikoshi                   # bare host key
+    user: arpatek
+
+  - host: gonk-01                   # bare host key with IP override
+    hostname: 10.33.111.200
     user: sysadmin
 ```
 
