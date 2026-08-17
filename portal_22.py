@@ -58,6 +58,10 @@ def FAILED()   -> str: return f"{YELLOW}[{RED}!{YELLOW}]{RESET}"
 def LAMBDA()   -> str: return f"{YELLOW}[{SAGE}λ{YELLOW}]{RESET}"
 
 # ──[ Key Naming ]──────────────────────────────────────────────────────────────────────
+def local_hostname() -> str:
+    return socket.gethostname().removesuffix(".local")
+
+
 def build_key_name(
     *,
     global_key: bool,
@@ -79,9 +83,9 @@ def build_comment(
     user:       str,
 ) -> str:
     if global_key:
-        return f"{socket.gethostname()}@global"
+        return f"{local_hostname()}@global"
     if platform:
-        return f"{socket.gethostname()}@{platform}"
+        return f"{local_hostname()}@{platform}"
     return f"{user}@{host}"
 
 # ──[ SSH Config ]──────────────────────────────────────────────────────────────────────
