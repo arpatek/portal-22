@@ -17,7 +17,7 @@ machines:
   - global: true
     encryption: ed25519
 
-  # ── Git platform keys ──────────────────────────────────────────────────────
+  # ── Git platform keys ───────────────────────────────────────────────────────
 
   - type: git
     platform: codeberg
@@ -36,7 +36,7 @@ machines:
     user: git
     port: 2222
 
-  # ── Homelab hosts ──────────────────────────────────────────────────────────
+  # ── Homelab hosts ───────────────────────────────────────────────────────────
 
   - host: netrunner
     hostname: 10.33.111.141
@@ -64,10 +64,29 @@ machines:
   - host: kerenzikov
     user: arpatek
 
-  # ── Dev VMs — reprovisioned as needed ─────────────────────────────────────
+  # ── Dev VM — reprovisioned as needed ────────────────────────────────────────
 
-  - host: gonk-01
+  - host: errata
+    user: student
+
+  # ── Practice VMs — UTM, rebuilt from GOLD constantly ────────────────────────
+
+  - host: glados
+    hostname: 192.168.64.210
     user: sysadmin
 
-  - host: gonk-02
+  - host: tars
+    hostname: 192.168.64.211
+    user: sysadmin
+
+  - host: gort
+    hostname: 10.33.111.212
+    user: sysadmin
+
+  - host: talos
+    hostname: 10.33.111.213
+    user: sysadmin
+
+  - host: wopr
+    hostname: 10.33.111.214
     user: sysadmin
