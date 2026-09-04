@@ -64,12 +64,15 @@ machines:
   - host: kerenzikov
     user: arpatek
 
+  - host: edgerunner
+    user: sysadmin
+
   # ── Dev VM — reprovisioned as needed ────────────────────────────────────────
 
   - host: errata
     user: student
 
-  # ── Practice VMs — UTM, rebuilt from GOLD constantly ────────────────────────
+  # ── Practice VMs — UTM on darwin, shared net ────────────────────────────────
 
   - host: glados
     hostname: 192.168.64.210
@@ -79,6 +82,8 @@ machines:
     hostname: 192.168.64.211
     user: sysadmin
 
+  # ── Practice VMs — UTM on mizutani, bridged ─────────────────────────────────
+
   - host: gort
     hostname: 10.33.111.212
     user: sysadmin
@@ -87,6 +92,10 @@ machines:
     hostname: 10.33.111.213
     user: sysadmin
 
-  - host: wopr
+  - host: clank
     hostname: 10.33.111.214
+    user: sysadmin
+
+  - host: hal
+    hostname: 10.33.111.215
     user: sysadmin
